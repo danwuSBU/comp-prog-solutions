@@ -142,13 +142,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="10kindsofpeople.cpp" />
-    <ClCompile Include="cd.cpp" />
-    <ClCompile Include="10kindsofpeopleTLE.cpp" />
-    <ClCompile Include="gcpc.cpp" />
     <ClCompile Include="TEMPLATE.cpp" />
-    <ClCompile Include="unionfind.cpp" />
-    <ClCompile Include="union_find.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

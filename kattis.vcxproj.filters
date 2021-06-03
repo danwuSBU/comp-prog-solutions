@@ -18,25 +18,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="cd.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="10kindsofpeopleTLE.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="10kindsofpeople.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="union_find.cpp">
-      <Filter>data structures</Filter>
-    </ClCompile>
-    <ClCompile Include="unionfind.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="TEMPLATE.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gcpc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
