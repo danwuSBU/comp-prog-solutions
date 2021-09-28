@@ -21,7 +21,7 @@
     <ClCompile Include="TEMPLATE.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="arachnophobia.cpp">
+    <ClCompile Include="guessthedatastructure.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

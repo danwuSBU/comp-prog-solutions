@@ -143,7 +143,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="arachnophobia.cpp" />
+    <ClCompile Include="guessthedatastructure.cpp" />
     <ClCompile Include="TEMPLATE.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
