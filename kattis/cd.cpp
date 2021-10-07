@@ -3,7 +3,16 @@
 #include <unordered_set>
 
 using namespace std;
-
+/*input
+3 3
+1
+2
+3
+1
+2
+4
+0 0
+*/
 int main()
 {
 	int cd;
