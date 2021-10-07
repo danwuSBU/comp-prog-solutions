@@ -1,4 +1,4 @@
-https://open.kattis.com/problems/cd
+//https://open.kattis.com/problems/cd
 #include <iostream>
 #include <unordered_set>
 
@@ -12,7 +12,7 @@ int main()
 	cin >> j1;
 	cin >> j2;
 
-	while (j1 != 0 and j2 != 0)
+	while (j1 != 0 && j2 != 0)
 	{
 		unordered_set<int> set;
 		for (int i = 0; i < j1; i++)

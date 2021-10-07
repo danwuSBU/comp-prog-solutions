@@ -17,12 +17,4 @@
       <UniqueIdentifier>{d7856cf9-f8d7-4a6f-9689-c7e387a937a9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="TEMPLATE.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="guessthedatastructure.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
 </Project>
