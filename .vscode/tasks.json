@@ -2,10 +2,9 @@
     "tasks": [
         {
             "type": "cppbuild",
-            "label": "C/C++: g++-9 build active file",
-            "command": "/usr/bin/g++-9",
+            "label": "C/C++: g++-10 build active file",
+            "command": "/usr/bin/g++-10",
             "args": [
-                "-std=gnu++17",
                 "-fdiagnostics-color=always",
                 "-g",
                 "${file}",
