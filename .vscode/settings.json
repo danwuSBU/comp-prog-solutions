@@ -3,6 +3,24 @@
         "iostream": "cpp",
         "deque": "cpp",
         "string": "cpp",
-        "vector": "cpp"
+        "vector": "cpp",
+        "any": "cpp",
+        "*.tcc": "cpp",
+        "charconv": "cpp",
+        "chrono": "cpp",
+        "compare": "cpp",
+        "complex": "cpp",
+        "optional": "cpp",
+        "algorithm": "cpp",
+        "limits": "cpp",
+        "memory_resource": "cpp",
+        "numeric": "cpp",
+        "ostream": "cpp",
+        "ranges": "cpp",
+        "streambuf": "cpp",
+        "system_error": "cpp",
+        "thread": "cpp",
+        "regex": "cpp",
+        "valarray": "cpp"
     }
 }
