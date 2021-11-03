@@ -21,6 +21,7 @@
         "system_error": "cpp",
         "thread": "cpp",
         "regex": "cpp",
-        "valarray": "cpp"
+        "valarray": "cpp",
+        "numbers": "cpp"
     }
 }
