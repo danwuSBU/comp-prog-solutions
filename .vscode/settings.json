@@ -23,6 +23,7 @@
         "regex": "cpp",
         "valarray": "cpp",
         "numbers": "cpp",
-        "concepts": "cpp"
+        "concepts": "cpp",
+        "bitset": "cpp"
     }
 }
