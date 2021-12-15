@@ -2,7 +2,9 @@
 using namespace std;
 
 void solve() {
-    
+    vector<int> V(7);
+    for (auto &a : V) cin >> a;
+    cout << V.front() << ' ' << V[1] << ' ' << V.back() - (V.front() + V[1]) << '\n';
 }
  
 int main()
