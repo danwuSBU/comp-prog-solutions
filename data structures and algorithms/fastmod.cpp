@@ -15,7 +15,7 @@ void solve() {
 int main()
 {
     // use "\n" instead of cout << endl
-    for (int i = 1; i < MAX_INT; i++) fact[i] = fact[i - 1] * i;
+    for (int i = 1; i < MAX_INT; i++) fact[i] = (fact[i - 1] * i) % mod;
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
     int t; cin >> t; while (t--) {
