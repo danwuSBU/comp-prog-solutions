@@ -3,8 +3,6 @@ using namespace std;
  
 typedef long long ll;
 typedef pair<int, int> p;
-
-ll inf32 = 1e18;
  
 template <typename T> void output_vector(vector<T> V) {
     for (auto v : V) cout << v << ' ';
@@ -12,20 +10,16 @@ template <typename T> void output_vector(vector<T> V) {
 }
 
 void solve() {
-    int n, x; cin >> n;
+    int n; cin >> n;
     vector<int> A(n); for (int &a : A) cin >> a;
-    cin >> x;
-    for (int &a : A) a -= x;
-    int ret = 0; ll s = inf32;
-    for (int &a : A) {
-        s += a;
-        if (s < 0) s = inf32;
-        else {
-            ret++;
-            s = min(s, (ll) a);
-        }
+    sort(A.begin(), A.end());
+    for (int i = 1; i < n; i++) {
+        if (A[i] == A[i - 1]) A[i] *= -1;
     }
-    cout << ret << '\n';
+    sort(A.begin(), A.end());
+    auto last = unique(A.begin(), A.end());
+    A.erase(last, A.end());
+    cout << A.size() << '\n';
 }
  
 int main() 
