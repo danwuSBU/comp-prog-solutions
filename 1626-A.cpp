@@ -26,10 +26,21 @@ template <typename T> T min(vector<T> V) {
 }
 
 void solve() {
-    int n; cin >> n;
-    vector<int> A(n); for (int &a : A) cin >> a;
-    sort(A.begin(), A.end());
-    
+    string s; cin >> s;
+    map<char, int> counter;
+    for (char &c : s) {
+        if (!counter.count(c)) counter[c] = 1;
+        else counter[c]++;
+    }
+    string a = "", b = "";
+    for (const auto &[k, v] : counter) {
+        if (v == 2) {
+            a += string{k};
+        }
+        else b += string(v, k);
+    }
+    a += a + b;
+    cout << a << '\n';
 }
 
 int main() 

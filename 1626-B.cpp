@@ -26,10 +26,18 @@ template <typename T> T min(vector<T> V) {
 }
 
 void solve() {
-    int n; cin >> n;
-    vector<int> A(n); for (int &a : A) cin >> a;
-    sort(A.begin(), A.end());
-    
+    string xs; cin >> xs;
+    for (int i = xs.length() - 1; i > 0; i--) {
+        if (xs[i] + xs[i - 1] - 96 > 9) {
+            cout << xs.substr(0, i - 1) + to_string(xs[i] + xs[i - 1] - 96);
+            for (int j = i + 1; j < xs.length(); j++) cout << xs[j];
+            cout << '\n';
+            return;
+        }
+    }
+    cout << to_string(xs[0] + xs[1] - 96);
+    for (int i = 2; i < xs.length(); i++) cout << xs[i];
+    cout << '\n';
 }
 
 int main() 

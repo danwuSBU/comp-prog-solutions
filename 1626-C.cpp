@@ -27,9 +27,23 @@ template <typename T> T min(vector<T> V) {
 
 void solve() {
     int n; cin >> n;
-    vector<int> A(n); for (int &a : A) cin >> a;
-    sort(A.begin(), A.end());
-    
+    vector<int> K(n); for (int &k : K) cin >> k;
+    vector<int> H(n); for (int &h : H) cin >> h;
+    ll mana = 0;
+    int index = n - 1;
+    while (index >= 0) {
+        int b = index;
+        int hp = H[index];
+        while (index > 0 && K[b] - K[index - 1] < hp) {
+            if (H[index - 1] > hp - (K[b] - K[index - 1])) {
+                hp = H[index - 1] + (K[b] - K[index - 1]);
+            }
+            index--;
+        }
+        mana += 1LL * hp * (hp + 1) / 2;
+        index--;
+    }
+    cout << mana << '\n';
 }
 
 int main() 
