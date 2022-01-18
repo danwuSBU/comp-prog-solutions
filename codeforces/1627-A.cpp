@@ -1,12 +1,12 @@
 #include <bits/stdc++.h>
 
 #define speedup cout.tie(nullptr); cin.tie(nullptr); ios_base::sync_with_stdio(false)
-#define interactive true
+#define interactive false
 
 using namespace std;
 
 typedef long long ll;
-typedef pair<int, int> p;
+typedef pair<ll, ll> p;
 
 ll mod = 1e9 + 7;
 int BIG32 = 1e9 + 5;
@@ -26,23 +26,32 @@ template <typename T> T min(vector<T> V) {
 }
 
 void solve() {
-    int n, c; cin >> n;
-    int MAX = 1000005;
-    bool ok[MAX] = {false};
-    for (int i = 0; i < n; i++) {
-        cin >> c;
-        ok[c] = true;
-    }
-    for (int i = 1; i < MAX; i++) {
-        if (!ok[i]) {
-            int curr = 0;
-            for (int j = i; j < MAX; j += i) {
-                if (ok[j]) curr = __gcd(curr, j);
-            }
-            if (curr == i) ok[i] = true;
+    int n, m, r, c; cin >> n >> m >> r >> c;
+    vector<vector<char>> G(n, vector<char>(m));
+    bool has = false;
+    for (vector<char> &v : G) {
+        for (char &c : v) {
+            cin >> c;
+            if (c == 'B') has = true;
         }
     }
-    cout << count(ok, ok + MAX, true) - n;
+    if (!has) {
+        cout << "-1\n";
+        return;
+    }
+    if (G[r - 1][c - 1] == 'B') {
+        cout << "0\n";
+        return;
+    }
+    has = false;
+    for (int i = 0; i < n; i++) {
+        if (G[i][c - 1] == 'B') has = true;
+    }
+    for (int i = 0; i < m; i++) {
+        if (G[r - 1][i] == 'B') has = true;
+    }
+    if (has) cout << "1\n";
+    else cout << "2\n";
 }
 
 int main() 

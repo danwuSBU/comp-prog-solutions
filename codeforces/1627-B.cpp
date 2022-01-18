@@ -1,12 +1,12 @@
 #include <bits/stdc++.h>
 
 #define speedup cout.tie(nullptr); cin.tie(nullptr); ios_base::sync_with_stdio(false)
-#define interactive true
+#define interactive false
 
 using namespace std;
 
 typedef long long ll;
-typedef pair<int, int> p;
+typedef pair<ll, ll> p;
 
 ll mod = 1e9 + 7;
 int BIG32 = 1e9 + 5;
@@ -26,23 +26,25 @@ template <typename T> T min(vector<T> V) {
 }
 
 void solve() {
-    int n, c; cin >> n;
-    int MAX = 1000005;
-    bool ok[MAX] = {false};
+    int n, m; cin >> n >> m;
+    vector<vector<int>> G(n, vector<int>(m, 0));
     for (int i = 0; i < n; i++) {
-        cin >> c;
-        ok[c] = true;
-    }
-    for (int i = 1; i < MAX; i++) {
-        if (!ok[i]) {
-            int curr = 0;
-            for (int j = i; j < MAX; j += i) {
-                if (ok[j]) curr = __gcd(curr, j);
+        for (int j = 0; j < m; j++) {
+            for (int x : {0, n - 1}) {
+                for (int y : {0, m - 1}) {
+                    G[i][j] = max(G[i][j], abs(x - i) + abs(y - j));
+                }
             }
-            if (curr == i) ok[i] = true;
         }
     }
-    cout << count(ok, ok + MAX, true) - n;
+    vector<int> out;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            out.push_back(G[i][j]);
+        }
+    }
+    sort(out.begin(), out.end());
+    output_vector(out);
 }
 
 int main() 
