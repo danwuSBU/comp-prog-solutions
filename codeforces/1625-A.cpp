@@ -26,42 +26,24 @@ template <typename T> T min(vector<T> V) {
     return *min_element(V.begin(), V.end());
 }
 
-// from neal
-struct union_find {
-    // When data[x] < 0, x is a root and -data[x] is its tree size. When data[x] >= 0, data[x] is x's parent.
-    vector<int> data;
-    int components = 0;
-
-    union_find(int n = -1) {if (n >= 0) init(n);} void init(int n) {data.assign(n + 1, -1); components = n;}
-    
-    int find(int x) {return data[x] < 0 ? x : data[x] = find(data[x]);}
-    int get_size(int x) {return -data[find(x)];}
-    bool unite(int x, int y) {x = find(x); y = find(y); if (x == y) return false; if (-data[x] < -data[y]) swap(x, y); data[x] += data[y]; data[y] = x; components--; return true;}
-};
-
 struct edge {
     int u, v, w;
 };
 
 void solve() {
-    int n, m; cin >> n >> m;
-    vector<edge> edges(m);
-    int OR = 0;
-    for (edge &e : edges) {
-        cin >> e.u >> e.v >> e.w;
-        OR |= e.w;
-    }
-    for (int b : bitmask) {
-        if (OR & b) {
-            int newOR = OR - b;
-            union_find dsu(n);
-            for (edge &e : edges) {
-                if ((newOR | e.w) == newOR) dsu.unite(e.u, e.v);
-            }
-            if (dsu.components == 1) OR = newOR;
+    int n, l; cin >> n >> l;
+    vector<int> words(n);
+    for (int &w : words) cin >> w;
+    int out = 0;
+    for (int &b : bitmask) {
+        int ones = 0;
+        for (int &w : words) {
+            if (b & w) ones++;
         }
+        out <<= 1;
+        if (ones > n / 2) out++;
     }
-    cout << OR << '\n';
+    cout << out << '\n';
 }
 
 int main() 
