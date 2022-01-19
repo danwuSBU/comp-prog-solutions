@@ -17,27 +17,9 @@ template <typename T> T max(vector<T> V) {return *max_element(V.begin(), V.end()
 template <typename T> T min(vector<T> V) {return *min_element(V.begin(), V.end());}
 
 void solve() {
-    int n; cin >> n;
-    vector<p> A(n);
-    for (int i = 0; i < n; i++) {
-        cin >> A[i].first;
-        A[i].second = i;
-    }
-    sort(A.begin(), A.end(), greater<p>());
-    int shifts = 0;
-    vector<string> output;
-    for (int i = 0; i < A.size(); i++) {
-        if (A[i].second + 1 != n) {
-            output.push_back("1 " + to_string(n) + " " + to_string(A[i].second + 1) + "\n");
-            for (int j = i + 1; j < A.size(); j++) {
-                A[j].second -= (A[i].second + 1);
-                if (A[j].second < 0) A[j].second += n;
-            }
-        }
-        n--;
-    }
-    cout << output.size() << '\n';
-    for (string &s : output) cout << s;
+    string s; cin >> s;
+    if (count(s.begin(), s.end(), 'A') + count(s.begin(), s.end(), 'C') == count(s.begin(), s.end(), 'B')) cout << "YES\n";
+    else cout << "NO\n";
 }
 
 int main() 
