@@ -17,9 +17,9 @@ int BIG32 = 1e9 + 5;
 
 ll powmod(ll a,ll b) {ll res = 1; a %= mod; assert(b >= 0); for(; b; b >>= 1){if (b & 1) res = res * a % mod; a = a * a % mod;} return res;}
 
-template <typename T> void output_vector(vector<T> V, bool spaces=true) {for (auto v : V) {if (spaces) cout << v << ' '; else cout << v;} if (interactive) cout << endl; else cout << '\n';}
-template <typename T> T max(vector<T> V) {return *max_element(V.begin(), V.end());}
-template <typename T> T min(vector<T> V) {return *min_element(V.begin(), V.end());}
+template <typename T> void output_vector(vector<T> &V, bool spaces=true) {for (auto v : V) {if (spaces) cout << v << ' '; else cout << v;} if (interactive) cout << endl; else cout << '\n';}
+template <typename T> T max(vector<T> &V) {return *max_element(V.begin(), V.end());}
+template <typename T> T min(vector<T> &V) {return *min_element(V.begin(), V.end());}
 template <typename T> int sgn(T val) {return (T(0) < val) - (val < T(0));}
 template <typename T> T bisect_left(vector<T> &V, T x) {return lower_bound(V.begin(), V.end(), x) - V.begin();}
 template <typename T> T bisect_right(vector<T> &V, T x) {return upper_bound(V.begin(), V.end(), x) - V.begin();}
