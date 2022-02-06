@@ -1,243 +1,223 @@
-// from https://github.com/nealwu/competitive-programming/blob/master/seg_tree/seg_tree.cc
-#include <algorithm>
-#include <array>
-#include <cassert>
-#include <functional>
-#include <iostream>
-#include <vector>
+#include <bits/stdc++.h>
 using namespace std;
 
-// http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0200r0.html
-template<class Fun> class y_combinator_result {
-    Fun fun_;
-public:
-    template<class T> explicit y_combinator_result(T &&fun): fun_(std::forward<T>(fun)) {}
-    template<class ...Args> decltype(auto) operator()(Args &&...args) { return fun_(std::ref(*this), std::forward<Args>(args)...); }
-};
-template<class Fun> decltype(auto) y_combinator(Fun &&fun) { return y_combinator_result<std::decay_t<Fun>>(std::forward<Fun>(fun)); }
-
-
-struct segment_change {
-    // Use a sentinel value rather than a boolean to save significant memory (4-8 bytes per object).
-    static const int SENTINEL = numeric_limits<int>::lowest();
-
-    // Note that to_set goes first, and to_add goes after.
-    // TODO: check if these values can overflow int.
-    int to_set, to_add;
-
-    // TODO: make sure the default constructor is the identity segment_change.
-    segment_change(int _to_add = 0, int _to_set = SENTINEL) : to_set(_to_set), to_add(_to_add) {}
-
-    bool has_set() const {
-        return to_set != SENTINEL;
+class segtree {
+ public:
+  struct node {
+    // don't forget to set default value (used for leaves)
+    // not necessarily neutral element!
+    long long mn = 0;
+    long long add = 0;
+ 
+    void apply(int l, int r, long long v) {
+      mn += v;
+      add += v;
     }
-
-    bool has_change() const {
-        return has_set() || to_add != 0;
+  };
+ 
+  node unite(const node &a, const node &b) const {
+    node res;
+    res.mn = min(a.mn, b.mn);
+    return res;
+  }
+ 
+  inline void push(int x, int l, int r) {
+    int y = (l + r) >> 1;
+    int z = x + ((y - l + 1) << 1);
+    // push from x into (x + 1) and z
+    if (tree[x].add != 0) {
+      tree[x + 1].apply(l, y, tree[x].add);
+      tree[z].apply(y + 1, r, tree[x].add);
+      tree[x].add = 0;
     }
-
-    // Return the combined result of applying this segment_change followed by `other`.
-    // TODO: make sure to check for sentinel values.
-    segment_change combine(const segment_change &other) const {
-        if (other.has_set())
-            return other;
-
-        return segment_change(to_add + other.to_add, to_set);
+  }
+ 
+  inline void pull(int x, int z) {
+    tree[x] = unite(tree[x + 1], tree[z]);
+  }
+ 
+  int n;
+  vector<node> tree;
+ 
+  void build(int x, int l, int r) {
+    if (l == r) {
+      return;
     }
-};
-
-struct segment {
-    // TODO: check if these values can overflow int.
-    int maximum;
-    int64_t sum;
-    int first, last, max_diff;
-
-    // TODO: make sure the default constructor is the identity segment.
-    segment(int _maximum = numeric_limits<int>::lowest(), int64_t _sum = 0, int _first = 0, int _last = 0,
-            int _max_diff = -1) : maximum(_maximum), sum(_sum), first(_first), last(_last), max_diff(_max_diff) {}
-
-    bool empty() const {
-        return max_diff < 0;
+    int y = (l + r) >> 1;
+    int z = x + ((y - l + 1) << 1);
+    build(x + 1, l, y);
+    build(z, y + 1, r);
+    pull(x, z);
+  }
+ 
+  template <typename M>
+  void build(int x, int l, int r, const vector<M> &v) {
+    if (l == r) {
+      tree[x].apply(l, r, v[l]);
+      return;
     }
-
-    void apply(int length, const segment_change &change) {
-        if (change.has_set()) {
-            maximum = change.to_set;
-            sum = int64_t(length) * change.to_set;
-            first = last = change.to_set;
-            max_diff = 0;
-        }
-
-        maximum += change.to_add;
-        sum += int64_t(length) * change.to_add;
-        first += change.to_add;
-        last += change.to_add;
+    int y = (l + r) >> 1;
+    int z = x + ((y - l + 1) << 1);
+    build(x + 1, l, y, v);
+    build(z, y + 1, r, v);
+    pull(x, z);
+  }
+ 
+  node get(int x, int l, int r, int ll, int rr) {
+    if (ll <= l && r <= rr) {
+      return tree[x];
     }
-
-    void join(const segment &other) {
-        if (empty()) {
-            *this = other;
-            return;
-        } else if (other.empty()) {
-            return;
-        }
-
-        maximum = max(maximum, other.maximum);
-        sum += other.sum;
-        max_diff = max({max_diff, other.max_diff, abs(last - other.first)});
-        last = other.last;
+    int y = (l + r) >> 1;
+    int z = x + ((y - l + 1) << 1);
+    push(x, l, r);
+    node res{};
+    if (rr <= y) {
+      res = get(x + 1, l, y, ll, rr);
+    } else {
+      if (ll > y) {
+        res = get(z, y + 1, r, ll, rr);
+      } else {
+        res = unite(get(x + 1, l, y, ll, rr), get(z, y + 1, r, ll, rr));
+      }
     }
-
-    // TODO: decide whether to re-implement this for better performance. Mainly relevant when segments contain arrays.
-    void join(const segment &a, const segment &b) {
-        *this = a;
-        join(b);
+    pull(x, z);
+    return res;
+  }
+ 
+  template <typename... M>
+  void modify(int x, int l, int r, int ll, int rr, const M&... v) {
+    if (ll <= l && r <= rr) {
+      tree[x].apply(l, r, v...);
+      return;
     }
-};
-
-struct seg_tree {
-    static int highest_bit(unsigned x) {
-        return x == 0 ? -1 : 31 - __builtin_clz(x);
+    int y = (l + r) >> 1;
+    int z = x + ((y - l + 1) << 1);
+    push(x, l, r);
+    if (ll <= y) {
+      modify(x + 1, l, y, ll, rr, v...);
     }
-
-    int tree_n = 0;
-    vector<segment> tree;
-    vector<segment_change> changes;
-
-    seg_tree(int n = -1) {
-        if (n >= 0)
-            init(n);
+    if (rr > y) {
+      modify(z, y + 1, r, ll, rr, v...);
     }
-
-    void init(int n) {
-        tree_n = 1;
-
-        while (tree_n < n)
-            tree_n *= 2;
-
-        tree.assign(2 * tree_n, segment());
-        changes.assign(tree_n, segment_change());
+    pull(x, z);
+  }
+ 
+  int find_first_knowingly(int x, int l, int r, const function<bool(const node&)> &f) {
+    if (l == r) {
+      return l;
     }
-
-    // Builds our tree from an array in O(n).
-    void build(const vector<segment> &initial) {
-        int n = int(initial.size());
-        init(n);
-        assert(n <= tree_n);
-
-        for (int i = 0; i < n; i++)
-            tree[tree_n + i] = initial[i];
-
-        for (int position = tree_n - 1; position > 0; position--)
-            tree[position].join(tree[2 * position], tree[2 * position + 1]);
+    push(x, l, r);
+    int y = (l + r) >> 1;
+    int z = x + ((y - l + 1) << 1);
+    int res;
+    if (f(tree[x + 1])) {
+      res = find_first_knowingly(x + 1, l, y, f);
+    } else {
+      res = find_first_knowingly(z, y + 1, r, f);
     }
-
-    void apply_and_combine(int position, int length, const segment_change &change) {
-        tree[position].apply(length, change);
-
-        if (position < tree_n)
-            changes[position] = changes[position].combine(change);
+    pull(x, z);
+    return res;
+  }
+ 
+  int find_first(int x, int l, int r, int ll, int rr, const function<bool(const node&)> &f) {
+    if (ll <= l && r <= rr) {
+      if (!f(tree[x])) {
+        return -1;
+      }
+      return find_first_knowingly(x, l, r, f);
     }
-
-    void push_down(int position, int length) {
-        if (changes[position].has_change()) {
-            apply_and_combine(2 * position, length / 2, changes[position]);
-            apply_and_combine(2 * position + 1, length / 2, changes[position]);
-            changes[position] = segment_change();
-        }
+    push(x, l, r);
+    int y = (l + r) >> 1;
+    int z = x + ((y - l + 1) << 1);
+    int res = -1;
+    if (ll <= y) {
+      res = find_first(x + 1, l, y, ll, rr, f);
     }
-
-    template<typename T_range_op>
-    void process_range(int position, int start, int end, int a, int b, bool needs_join, T_range_op &&range_op) {
-        if (a <= start && end <= b) {
-            range_op(position, end - start);
-            return;
-        }
-
-        if (position >= tree_n)
-            return;
-
-        push_down(position, end - start);
-        int mid = (start + end) / 2;
-        if (a < mid) process_range(2 * position, start, mid, a, b, needs_join, range_op);
-        if (b > mid) process_range(2 * position + 1, mid, end, a, b, needs_join, range_op);
-        if (needs_join) tree[position].join(tree[2 * position], tree[2 * position + 1]);
+    if (rr > y && res == -1) {
+      res = find_first(z, y + 1, r, ll, rr, f);
     }
-
-    segment query(int a, int b) {
-        assert(0 <= a && a <= b && b <= tree_n);
-        segment answer;
-
-        process_range(1, 0, tree_n, a, b, false, [&](int position, int) {
-            answer.join(tree[position]);
-        });
-
-        return answer;
+    pull(x, z);
+    return res;
+  }
+ 
+  int find_last_knowingly(int x, int l, int r, const function<bool(const node&)> &f) {
+    if (l == r) {
+      return l;
     }
-
-    segment query_full() const {
-        return tree[1];
+    push(x, l, r);
+    int y = (l + r) >> 1;
+    int z = x + ((y - l + 1) << 1);
+    int res;
+    if (f(tree[z])) {
+      res = find_last_knowingly(z, y + 1, r, f);
+    } else {
+      res = find_last_knowingly(x + 1, l, y, f);
     }
-
-    void update(int a, int b, const segment_change &change) {
-        assert(0 <= a && a <= b && b <= tree_n);
-
-        process_range(1, 0, tree_n, a, b, true, [&](int position, int length) {
-            apply_and_combine(position, length, change);
-        });
+    pull(x, z);
+    return res;
+  }
+ 
+  int find_last(int x, int l, int r, int ll, int rr, const function<bool(const node&)> &f) {
+    if (ll <= l && r <= rr) {
+      if (!f(tree[x])) {
+        return -1;
+      }
+      return find_last_knowingly(x, l, r, f);
     }
-
-    vector<segment> to_array() {
-        for (int i = 1; i < tree_n; i++)
-            push_down(i, tree_n >> highest_bit(i));
-
-        vector<segment> segs(tree_n);
-
-        for (int i = 0; i < tree_n; i++)
-            segs[i] = tree[tree_n + i];
-
-        return segs;
+    push(x, l, r);
+    int y = (l + r) >> 1;
+    int z = x + ((y - l + 1) << 1);
+    int res = -1;
+    if (rr > y) {
+      res = find_last(z, y + 1, r, ll, rr, f);
     }
-
-    void update_single(int index, const segment &seg) {
-        assert(0 <= index && index < tree_n);
-        int position = tree_n + index;
-
-        for (int up = highest_bit(tree_n); up > 0; up--)
-            push_down(position >> up, 1 << up);
-
-        tree[position] = seg;
-
-        while (position > 1) {
-            position /= 2;
-            tree[position].join(tree[2 * position], tree[2 * position + 1]);
-        }
+    if (ll <= y && res == -1) {
+      res = find_last(x + 1, l, y, ll, rr, f);
     }
-
-    // Finds the end of the last subarray starting at `first` satisfying `should_join` via binary search in O(log n).
-    template<typename T_bool>
-    int find_last_subarray(T_bool &&should_join, int n, int first = 0) {
-        assert(0 <= first && first <= n);
-        segment current;
-
-        // Check the degenerate case.
-        if (!should_join(current, current))
-            return first - 1;
-
-        return y_combinator([&](auto search, int position, int start, int end) -> int {
-            if (end <= first) {
-                return end;
-            } else if (first <= start && end <= n && should_join(current, tree[position])) {
-                current.join(tree[position]);
-                return end;
-            } else if (end - start == 1) {
-                return start;
-            }
-
-            push_down(position, end - start);
-            int mid = (start + end) / 2;
-            int left = search(2 * position, start, mid);
-            return left < mid ? left : search(2 * position + 1, mid, end);
-        })(1, 0, tree_n);
-    }
+    pull(x, z);
+    return res;
+  }
+ 
+  segtree(int _n) : n(_n) {
+    assert(n > 0);
+    tree.resize(2 * n - 1);
+    build(0, 0, n - 1);
+  }
+ 
+  template <typename M>
+  segtree(const vector<M> &v) {
+    n = v.size();
+    assert(n > 0);
+    tree.resize(2 * n - 1);
+    build(0, 0, n - 1, v);
+  }
+ 
+  node get(int ll, int rr) {
+    assert(0 <= ll && ll <= rr && rr <= n - 1);
+    return get(0, 0, n - 1, ll, rr);
+  }
+ 
+  node get(int p) {
+    assert(0 <= p && p <= n - 1);
+    return get(0, 0, n - 1, p, p);
+  }
+ 
+  template <typename... M>
+  void modify(int ll, int rr, const M&... v) {
+    assert(0 <= ll && ll <= rr && rr <= n - 1);
+    modify(0, 0, n - 1, ll, rr, v...);
+  }
+ 
+  // find_first and find_last call all FALSE elements
+  // to the left (right) of the sought position exactly once
+ 
+  int find_first(int ll, int rr, const function<bool(const node&)> &f) {
+    assert(0 <= ll && ll <= rr && rr <= n - 1);
+    return find_first(0, 0, n - 1, ll, rr, f);
+  }
+ 
+  int find_last(int ll, int rr, const function<bool(const node&)> &f) {
+    assert(0 <= ll && ll <= rr && rr <= n - 1);
+    return find_last(0, 0, n - 1, ll, rr, f);
+  }
 };
