@@ -30,30 +30,28 @@ vector<ll> p2;
 vector<int> fib;
 
 void solve() {
-    string s; cin >> s;
-    int rgb[3] = {0, 0, 0};
-    for EACH(c, s) {
-        if (c == 'r') rgb[0]++;
-        if (c == 'g') rgb[1]++;
-        if (c == 'b') rgb[2]++;
-        if (c == 'R') rgb[0]--;
-        if (c == 'G') rgb[1]--;
-        if (c == 'B') rgb[2]--;
-        if (rgb[0] < 0 || rgb[1] < 0 || rgb[2] < 0) {
-            cout << "NO\n";
-            return;
+    ll x, n; cin >> n >> x;
+    map<ll, int> nums;
+    vector<ll> A(n); for EACH(a, A) {
+        cin >> a;
+        if (nums.count(a)) nums[a]++;
+        else nums[a] = 1;
+    }
+    sort(A.begin(), A.end());
+    int pairs = 0;
+    for EACH(a, A) {
+        if (nums[a] == 0) continue;
+        nums[a]--;
+        if (nums.count(a * x) && nums[a * x] > 0) {
+            pairs++;
+            nums[a * x]--;
         }
     }
-    cout << "YES\n";
+    cout << n - pairs * 2 << '\n';
 }
 
 int main() 
 {
-    p2 = {1};
-    REP(33) p2.push_back(p2.back() << 1);
-    fib = {1, 1};
-    REP(2e5 + 5) fib.push_back((fib.back() + fib.end()[-2]) % mod);
-    FOR(i, 1, fib.size()) fib[i] = (fib[i] + fib[i - 1]) % mod;
     cout.tie(nullptr); cin.tie(nullptr); ios_base::sync_with_stdio(false);
     if (interactive) solve();
     else {
