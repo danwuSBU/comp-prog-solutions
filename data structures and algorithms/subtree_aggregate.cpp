@@ -1,17 +1,14 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-// subtree sums
-unordered_set<int> visited;
-vector<int> values;
-vector<unordered_set<int>> graph;
-int sum(int node) {
+// subtree sizes
+int get_st_sizes(vector<int> &sizes, set<int> &visited, vector<vector<int>> &graph, int node) {
     visited.insert(node);
-    int z = values[node];
+    int s = 1;
     for (int y : graph[node]) {
         if (visited.count(y)) continue;
-        int child = sum(y);
-        z += child;
+        s += get_st_sizes(sizes, visited, graph, y);
     }
-    return z;
+    sizes[node] = s;
+    return s;
 }
